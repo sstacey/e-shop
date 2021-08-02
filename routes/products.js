@@ -48,4 +48,13 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+router.delete('/:id', async (req, res) => {
+    try {
+        await db.query('DELETE FROM product WHERE id = $1', [req.product.id])
+        res.status(204).send()
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+})
+
 module.exports = router
