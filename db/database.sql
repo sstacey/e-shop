@@ -4,38 +4,38 @@ CREATE DATABASE e_shop;
 
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  first_name VARCHAR(50),
-  last_name VARCHAR(50),
-  email VARCHAR(100) UNIQUE
+  first_name VARCHAR(50) NOT NULL,
+  last_name VARCHAR(50) NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL
   );
   
 CREATE TABLE product (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(100),
-  description TEXT,
-  price MONEY
+  name VARCHAR(100) NOT NULL,
+  description TEXT NOT NULL,
+  price MONEY NOT NULL
   );
   
 CREATE TABLE cart (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id)
+  user_id INTEGER REFERENCES users(id) NOT NULL
   );
   
  CREATE TABLE cart_product (
    id SERIAL PRIMARY KEY,
-   cart_id INTEGER REFERENCES cart (id),
-   product_id INTEGER REFERENCES product (id),
-   quantity INTEGER,
-   price MONEY
+   cart_id INTEGER REFERENCES cart (id) NOT NULL,
+   product_id INTEGER REFERENCES product (id) NOT NULL,
+   quantity INTEGER NOT NULL,
+   price MONEY NOT NULL
    );
    
  CREATE TABLE "order" (
    id INTEGER PRIMARY KEY,
-   cart_id INTEGER REFERENCES cart (id),
-   date_submitted DATE,
-   date_shipped DATE,
+   cart_id INTEGER REFERENCES cart (id) NOT NULL,
+   total MONEY NOT NULL
+   date_submitted DATE NOT NULL,
    shipped bool,
-   total MONEY
+   date_shipped DATE,
    );
   
  INSERT INTO users 

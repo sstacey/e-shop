@@ -1,10 +1,15 @@
 const express = require('express')
+const bodyParser = require('body-parser')
 const mountRoutes = require('./routes')
 
-const app = express()
-mountRoutes(app)
+
 const port = process.env.PORT
 
+const app = express()
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+mountRoutes(app)
 
 
 app.get('/', async (req, res) => {
