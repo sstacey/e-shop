@@ -1,9 +1,15 @@
 const express = require('express')
-const app = express()
-const port = process.env.PORT || 3000
+const mountRoutes = require('./routes')
 
-app.get('/', (req, res) => {
+const app = express()
+mountRoutes(app)
+const port = process.env.PORT
+
+
+
+app.get('/', async (req, res) => {
     res.end('Hello, Mate!')
+    
 })
 
 app.listen(port, () => {
