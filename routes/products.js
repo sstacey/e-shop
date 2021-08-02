@@ -40,7 +40,6 @@ router.put('/:id', async (req, res) => {
     try {
         for (let key in updates) {
             await db.query(format('UPDATE product SET %I = %L WHERE id = %L',key, updates[key], req.product.id))
-            // await db.query('UPDATE product SET $1 = $2 WHERE id = $3', [key, updates[key], req.product.id])
         }
         res.status(204).send()
     } catch (e) {
