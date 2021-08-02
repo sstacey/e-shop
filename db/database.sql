@@ -46,9 +46,9 @@ CREATE TABLE cart (
   
 INSERT INTO product
  VALUES
- 	(1, 'Snuggie', 'Comfy blanket for all uses', 19.99),
-  (2, 'Slap Chop', 'Chop them veggies with ease', 59.99),
-  (3, 'Chia Pet', 'Grow spices in your kitchen!', 9.99);
+ 	(DEFAULT, 'Snuggie', 'Comfy blanket for all uses', 19.99),
+  (DEFAULT, 'Slap Chop', 'Chop them veggies with ease', 59.99),
+  (DEFAULT, 'Chia Pet', 'Grow spices in your kitchen!', 9.99);
   
 INSERT INTO cart
  VALUES
