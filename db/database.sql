@@ -2,7 +2,7 @@ CREATE DATABASE e_shop;
 
 --\c into e_shop
 
-CREATE TABLE customer (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   first_name VARCHAR(50),
   last_name VARCHAR(50),
@@ -18,7 +18,7 @@ CREATE TABLE product (
   
 CREATE TABLE cart (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES customer(id)
+  user_id INTEGER REFERENCES users(id)
   );
   
  CREATE TABLE cart_product (
@@ -38,11 +38,11 @@ CREATE TABLE cart (
    total MONEY
    );
   
- INSERT INTO customer (first_name, last_name, email)
+ INSERT INTO users 
  VALUES
- 	('Sterling', 'Archer', 'sarcher@gmail.com'),
-  ('John', 'Wayne', 'jw@gmail.com'),
-  ('Billy', 'The Kid', 'bkid@hotmail.com');
+ 	(DEFAULT, 'Sterling', 'Archer', 'sarcher@gmail.com'),
+  (DEFAULT, 'John', 'Wayne', 'jw@gmail.com'),
+  (DEFAULT, 'Billy', 'The Kid', 'bkid@hotmail.com');
   
 INSERT INTO product
  VALUES
