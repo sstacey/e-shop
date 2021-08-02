@@ -1,4 +1,5 @@
 const Router = require('express-promise-router')
+const format = require('pg-format')
 
 const db = require('../db')
 
@@ -27,8 +28,21 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     const { name, description, price} = req.body
     try {
-        const { rows } = await await db.query('INSERT INTO product VALUES(DEFAULT, $1, $2, $3)', [name, description, price])
-        res.status(201).send({name, description, price})
+        const newitem = await db.query('INSERT INTO product VALUES(DEFAULT, $1, $2, $3) RETURNING *', [name, description, price])
+        res.status(201).send(newitem.rows[0])
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    const updates = req.body
+    try {
+        for (let key in updates) {
+            await db.query(format('UPDATE product SET %I = %L WHERE id = %L',key, updates[key], req.product.id))
+            // await db.query('UPDATE product SET $1 = $2 WHERE id = $3', [key, updates[key], req.product.id])
+        }
+        res.status(204).send()
     } catch (e) {
         res.status(500).send(e.message)
     }
