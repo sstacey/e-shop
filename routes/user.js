@@ -5,7 +5,8 @@ const db = require('../db')
 const router = new Router()
 
 router.get('/', async (req, res) => {
-    res.send(await db.query('SELECT NOW()'))
+    const { rows } = await db.query("SELECT * FROM customer")
+    res.send(rows)
 })
 
 module.exports = router
