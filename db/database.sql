@@ -33,7 +33,7 @@ CREATE TABLE orders (
    user_id INTEGER REFERENCES users (id),
    total MONEY NOT NULL,
    date_ordered TIMESTAMP DEFAULT now(),
-   shipped bool,
+   shipped bool DEFAULT false,
    date_shipped DATE
    );
 
