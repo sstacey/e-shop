@@ -28,14 +28,22 @@ CREATE TABLE cart (
    price MONEY NOT NULL
    );
    
- CREATE TABLE "order" (
-   id INTEGER PRIMARY KEY,
-   cart_id INTEGER REFERENCES cart (id) NOT NULL,
-   total MONEY NOT NULL
-   date_submitted DATE NOT NULL,
-   shipped bool,
-   date_shipped DATE,
+CREATE TABLE orders (
+   id SERIAL PRIMARY KEY,
+   user_id INTEGER REFERENCES users (id) NOT NULL,
+   total MONEY NOT NULL,
+   date_ordered TIMESTAMP DEFAULT now(),
+   shipped bool DEFAULT false,
+   date_shipped DATE
    );
+
+CREATE TABLE  orders_item (
+   id SERIAL PRIMARY KEY, 
+   product_id INTEGER REFERENCES product (id) NOT NULL,
+   order_id INTEGER REFERENCES orders (id) NOT NULL,
+   quantity INTEGER DEFAULT 1,
+   PRICE MONEY NOT NULL
+  );
   
  INSERT INTO users 
  VALUES
@@ -45,9 +53,9 @@ CREATE TABLE cart (
   
 INSERT INTO product
  VALUES
- 	(DEFAULT, 'Snuggie', 'Comfy blanket for all uses', 19.99),
-  (DEFAULT, 'Slap Chop', 'Chop them veggies with ease', 59.99),
-  (DEFAULT, 'Chia Pet', 'Grow spices in your kitchen!', 9.99);
+ 	(DEFAULT, 'Snuggie', 'The original Snuggie - the blanket with sleeves!', 19.99),
+  (DEFAULT, 'Quick Chop', 'The Quick Chop chops, minces, slices, dices with just a tap!', 19.95),
+  (DEFAULT, 'Chia Pet', 'Collecting and growing Chia Pet pottery planters has become an American tradition.', 19.99);
   
 INSERT INTO cart
  VALUES
@@ -62,5 +70,17 @@ VALUES
   (3, 1, 3, 2, 9.99),
   (4, 2, 1, 1, 9.99);
   
-INSERT INTO "order"
-VALUES (1, 1, '2021-07-30', '20201-07-31', true);
+INSERT INTO orders
+VALUES
+  (DEFAULT, 1, 99.99),
+  (DEFAULT, 1, 59.99),
+  (DEFAULT, 1, 9.99),
+  (DEFAULT, 3, 1000.00);
+
+INSERT INTO orders_item (product_id, order_id, quantity, price)
+VALUES
+  (1, 1, DEFAULT, 9.99),
+  (2, 1, DEFAULT, 9.99),
+  (3, 2, DEFAULT, 9.99),
+  (1, 2, DEFAULT, 9.99),
+  (1, 3, DEFAULT, 9.99);

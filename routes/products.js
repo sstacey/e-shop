@@ -17,7 +17,7 @@ router.param('id', async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-    const { rows } = await db.query("SELECT * FROM product")
+    const { rows } = await db.query('SELECT * FROM product')
     res.json(rows)
 })
 
