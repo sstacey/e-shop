@@ -30,7 +30,7 @@ CREATE TABLE cart (
    
 CREATE TABLE orders (
    id SERIAL PRIMARY KEY,
-   user_id INTEGER REFERENCES users (id),
+   user_id INTEGER REFERENCES users (id) NOT NULL,
    total MONEY NOT NULL,
    date_ordered TIMESTAMP DEFAULT now(),
    shipped bool DEFAULT false,

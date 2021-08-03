@@ -56,12 +56,34 @@ router.delete('/:id', async (req, res) => {
 // order items routes
 router.get('/:id/items', async (req, res) => {
     const query = {
-        text: 'SELECT orders_item.product_id FROM orders_item INNER JOIN orders ON orders_item.order_id = orders.id WHERE orders.id = $1;',
+        text:  `SELECT product.name, orders_item.quantity, orders_item.price
+                FROM orders_item 
+                INNER JOIN orders 
+                ON orders_item.order_id = orders.id
+                INNER JOIN product
+                ON orders_item.product_id = product.id
+                WHERE orders.id = $1;`,
         values: [req.order.id]
     }
     try {
         const { rows } = await db.query(query)
         res.send(rows)
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+})
+
+router.post('/:id/items', async (req, res) => {
+    const { product_id, order_id, quantity, price } = req.body
+    const query = {
+        text:  `INSERT INTO orders_item
+                VALUES(DEFAULT, $1, $2, $3, $4)
+                RETURNING *;`,
+        values: [product_id, order_id, quantity, price]
+    }
+    try {
+        const newItem = await db.query(query)
+        res.send(newItem.rows[0])
     } catch (e) {
         res.status(500).send(e.message)
     }
