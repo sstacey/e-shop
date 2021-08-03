@@ -35,8 +35,14 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const { user_id, total } = req.body
+    const query = {
+        text:   `INSERT INTO orders 
+                VALUES(DEFAULT, $1, $2) 
+                RETURNING *;`,
+        values: [user_id, total]
+    }
     try {
-        const newitem = await db.query('INSERT INTO orders VALUES(DEFAULT, $1, $2) RETURNING *', [user_id, total])
+        const newitem = await db.query(query)
         res.status(201).send(newitem.rows[0])
     } catch (e) {
         res.status(500).send(e.message)
@@ -51,7 +57,6 @@ router.delete('/:id', async (req, res) => {
         res.status(500).send(e.message)
     }
 })
-
 
 // order items routes
 router.get('/:id/items', async (req, res) => {
@@ -88,11 +93,6 @@ router.post('/:id/items', async (req, res) => {
         res.status(500).send(e.message)
     }
 })
-
-
-
-
-
 
 module.exports = router
 
