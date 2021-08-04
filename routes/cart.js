@@ -62,4 +62,27 @@ router.post('/:id', async (req, res) => {
     }
 })
 
+router.post('/:id/checkout', async (req, res) => {
+    const processPayment = () => {
+        return true
+    }
+
+    if (!processPayment()){
+        return res.status(500).send('Payment not approved')
+    }
+    
+    const query = {
+        text: `UPDATE cart SET ordered = true WHERE id = $1 RETURNING *`,
+        values: [req.cart.id]
+    }
+
+    try {
+        const { rows } = await db.query(query)
+        res.send(rows[0])
+    } catch (e) {
+        res.status(500).send(e.message)
+    }
+
+})
+
 module.exports = router
