@@ -20,11 +20,11 @@ CREATE TABLE cart (
   user_id INTEGER REFERENCES users(id) NOT NULL
   );
   
- CREATE TABLE cart_product (
+ CREATE TABLE cart_items (
    id SERIAL PRIMARY KEY,
    cart_id INTEGER REFERENCES cart (id) NOT NULL,
    product_id INTEGER REFERENCES product (id) NOT NULL,
-   quantity INTEGER NOT NULL,
+   quantity INTEGER NOT NULL DEFAULT 1,
    price MONEY NOT NULL
    );
    
@@ -49,7 +49,9 @@ CREATE TABLE  orders_item (
  VALUES
  	(DEFAULT, 'Sterling', 'Archer', 'sarcher@gmail.com'),
   (DEFAULT, 'John', 'Wayne', 'jw@gmail.com'),
-  (DEFAULT, 'Billy', 'The Kid', 'bkid@hotmail.com');
+  (DEFAULT, 'Billy', 'The Kid', 'bkid@hotmail.com'),
+  (DEFAULT, 'Jimmy', 'Shark', 'jshark@hotmail.com'),
+  (DEFAULT, 'Archer', 'Stacey', 'arch@hotmail.com');
   
 INSERT INTO product
  VALUES
