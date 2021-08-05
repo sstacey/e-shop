@@ -1,33 +1,36 @@
-const passport = require('passport-local')
-const { LocalStrategy } = require('passport-local')
+const passport = require('passport')
+const Strategy = require('passport-local')
+const crypto = require('crypto')
 
 const db = require('../db')
 
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use( new Strategy(async (username, password, cb) => {
     try {
-        const { row } = await db.query('SELECT id FROM users WHERE email=$1', [username])
+        const { row } = await db.query('SELECT id, email, password FROM users where email = $1', [username])
         const user = row[0]
     } catch (e) {
-        return done(e)
+        return cb(e)
     }
+    if (!user) { return cb(null, false, { message: 'Incorrect username or password'})}
 
-    if (!user) {return done (null, false)}
-
-    bcrypt.compare(password, user.password, (err, res) => {
-        if(res) {
-            done(null, {id: user.id, username: user.email})
-        } else {
-            done(null, false)
+    crypto.pbkdf2(passport, 'salt', 100000, 32, 'sha256', (err, hashedPassword) => {
+        if (err) { return cb(err) }
+        if (!crypto.timingSafeEqual(user.password, hashedPassword)) {
+            return cb(null, false, { message: 'Incorrect username or password'})
         }
+        return cb(null, {id: user.id, username: user.email})
     })
+
 }))
 
-passport.serializeUser((user, done) => {
-    done(null, user.id)
-})
+passport.serializeUser(function(user, cb) {
+    process.nextTick(function() {
+      cb(null, { id: user.id, username: user.email });
+    });
+  });
 
-passport.deserializeUser(async (id, done) => {
-    const { rows } = await db.query('SELECT id, username FROM users WHERE id = $1', [parseInt(id, 10)])
-    const user = rows[0]
-    done(null, user)
-})
+  passport.deserializeUser(function(user, cb) {
+    process.nextTick(function() {
+      return cb(null, user);
+    });
+  });

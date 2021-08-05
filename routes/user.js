@@ -17,7 +17,7 @@ router.param('id', async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-    const { rows } = await db.query("SELECT * FROM users")
+    const { rows } = await db.query("SELECT id, email FROM users")
     res.json(rows)
 })
 
@@ -29,11 +29,11 @@ router.post('/', async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         const query = {
-            text: 'INSERT INTO users VALUES(DEFAULT, $1, $2) RETURNING *;',
+            text: 'INSERT INTO users (id, email, password) VALUES(DEFAULT, $1, $2) RETURNING id, email;',
             values: [req.body.email, hashedPassword]
         }
-        const newUser = await db.query(query)
-        res.status(201).send(newUser.rows[0])
+        const { rows } = await db.query(query)
+        res.status(201).send(rows[0])
     } catch (e) {
         res.status(500).send(e.message)
     }
