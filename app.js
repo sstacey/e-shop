@@ -6,14 +6,18 @@ const passport = require('passport')
 
 const port = process.env.PORT
 
-const app = express()
+require('./auth/auth')
 
+const app = express()
 
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// Passport.js
 app.use(passport.initialize())
 app.use(passport.session())
+
 mountRoutes(app)
 
 
