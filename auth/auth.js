@@ -13,7 +13,7 @@ passport.use(
       passwordField: 'password'
     },
     async (email, password, done) => {
-      const hashedPassword = bcrypt.hash(password, 10)
+      const hashedPassword = await bcrypt.hash(password, 10)
       const query = {
         text: 'INSERT INTO users VALUES (default, $1, $2) RETURNING id, email',
         values: [email, hashedPassword]
