@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mountRoutes = require('./routes')
 const passport = require('passport')
+require('dotenv').config()
 
 require('./auth/auth')
 
