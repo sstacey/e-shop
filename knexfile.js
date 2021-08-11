@@ -13,15 +13,13 @@ module.exports = {
     },
   },
   test: {
-    test: {
-      client: 'postgresql',
-      connection: process.env.PG_CONN_TEST,
-      migrations: {
-        directory: __dirname + '/src/server/db/migrations',
-      },
-      seeds: {
-        directory: __dirname + '/src/server/db/seeds',
-      },
+    client: 'postgresql',
+    connection: process.env.PG_CONN_TEST,
+    migrations: {
+      directory: __dirname + '/src/server/db/migrations',
+    },
+    seeds: {
+      directory: __dirname + '/src/server/db/seeds',
     },
   },
 }
