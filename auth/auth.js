@@ -25,17 +25,6 @@ passport.use(
       } catch (e) {
         return done(e.message)
       }
-
-      // const query = {
-      //   text: 'INSERT INTO users VALUES (default, $1, $2) RETURNING id, email',
-      //   values: [email, hashedPassword],
-      // }
-      // try {
-      //   const { rows } = await db.query(query)
-      //   return done(null, rows[0])
-      // } catch (e) {
-      //   done(e.message)
-      // }
     }
   )
 )
