@@ -26,6 +26,7 @@ describe('Auth Endpoints', () => {
     expect(res.statusCode).toEqual(201)
     expect(res.body).toHaveProperty('user')
     expect(res.body.user.email).toBe(user.email)
+    user.id = res.body.user.id
   })
 
   it('should log user in', async () => {
@@ -37,9 +38,9 @@ describe('Auth Endpoints', () => {
 })
 
 describe('User Endpoints', () => {
-  it('GET /users/1 should return single user', async () => {
+  it('GET /users/4 should return single user', async () => {
     const res = await request(app)
-      .get('/users/1')
+      .get(`/users/${user.id}`)
       .set({ Authorization: `Bearer ${user.token}` })
     expect(res.statusCode).toEqual(200)
   })
