@@ -45,16 +45,16 @@ router.get('/:id', async (req, res) => {
 
 router.post('/:id', async (req, res) => {
   const { product_id, quantity, price } = req.body
-  const query = {
-    text: `INSERT INTO cart_items
-               VALUES(DEFAULT, $1, $2, $3, $4)
-               RETURNING *`,
-    values: [req.cart.id, product_id, quantity, price],
-  }
-
   try {
-    const { rows } = await db.query(query)
-    res.status(201).send(rows[0])
+    const newCartItem = await knex('cart_items')
+      .insert({
+        cart_id: req.cart.id,
+        product_id,
+        quantity,
+        price,
+      })
+      .returning('*')
+    res.status(201).json(newCartItem[0])
   } catch (e) {
     res.status(500).send(e.message)
   }
