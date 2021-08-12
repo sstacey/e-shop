@@ -45,3 +45,68 @@ describe('User Endpoints', () => {
     expect(res.statusCode).toEqual(200)
   })
 })
+
+describe('/products', () => {
+  it('should respond with list of products', async () => {
+    const res = await request(app)
+      .get('/products')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+
+  it('should respond with product given id', async () => {
+    const res = await request(app)
+      .get('/products/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+
+  it('should add a new product', async () => {
+    const newProduct = {
+      name: 'New Product',
+      description: 'Desc',
+      price: 99.99,
+    }
+    const res = await request(app)
+      .post('/products')
+      .set({ Authorization: `Bearer ${user.token}` })
+      .send(newProduct)
+    expect(res.statusCode).toEqual(201)
+  })
+
+  it('should not add a new product missing name', async () => {
+    const newProduct = {
+      description: 'Desc',
+      price: 99.99,
+    }
+    const res = await request(app)
+      .post('/products')
+      .set({ Authorization: `Bearer ${user.token}` })
+      .send(newProduct)
+    expect(res.statusCode).toEqual(400)
+    expect(res.body).toHaveProperty('errors')
+  })
+
+  it('should not allow unauthenticed user to view proucts', async () => {
+    const res = await request(app).get('/products')
+    expect(res.statusCode).toEqual(401)
+  })
+
+  it('should update a product', async () => {
+    const updatedProduct = {
+      name: 'UPDATED PRODUCT NAME',
+    }
+    const res = await request(app)
+      .put('/products/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+      .send(updatedProduct)
+    expect(res.statusCode).toEqual(204)
+  })
+
+  it('should delete a product', async () => {
+    const res = await request(app)
+      .delete('/products/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toBe(204)
+  })
+})

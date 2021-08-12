@@ -15,7 +15,6 @@ passport.use(
     },
     async (email, password, done) => {
       const hashedPassword = await bcrypt.hash(password, 10)
-      console.log(hashedPassword)
       try {
         const newUser = await knex('users').returning(['id', 'email']).insert({
           email,

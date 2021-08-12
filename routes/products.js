@@ -1,4 +1,5 @@
 const Router = require('express-promise-router')
+const { check, validationResult } = require('express-validator')
 
 const knex = require('../src/server/db/knex')
 
@@ -23,7 +24,20 @@ router.get('/:id', async (req, res) => {
   res.send(req.product)
 })
 
-router.post('/', async (req, res) => {
+const productValidator = [
+  check('name')
+    .notEmpty()
+    .withMessage('Name required')
+    .isLength({ max: 100 })
+    .trim(),
+  check('price').notEmpty().withMessage('Price required').isFloat(),
+]
+
+router.post('/', productValidator, async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() })
+  }
   const { name, description, price } = req.body
   try {
     const newProduct = await knex('products')
