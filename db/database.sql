@@ -42,7 +42,7 @@ CREATE TABLE  orders_item (
    product_id INTEGER REFERENCES product (id) NOT NULL,
    order_id INTEGER REFERENCES orders (id) NOT NULL,
    quantity INTEGER DEFAULT 1,
-   PRICE MONEY NOT NULL
+   price MONEY NOT NULL
   );
   
  INSERT INTO users 

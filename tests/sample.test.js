@@ -107,6 +107,35 @@ describe('/products', () => {
     const res = await request(app)
       .delete('/products/1')
       .set({ Authorization: `Bearer ${user.token}` })
+
     expect(res.statusCode).toBe(204)
   })
+})
+
+describe('/carts', () => {
+  it('should return all carts', async () => {
+    const res = await request(app)
+      .get('/cart')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+
+  it('should return cart by id', async () => {
+    const res = await request(app)
+      .get('/cart/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+
+  // it('should add new product to cart', async () => {
+  //   const res = await request(app)
+  //     .post('/cart/1')
+  //     .set({ Authorization: `Bearer ${user.token}` })
+  //     .send({
+  //       product_id: 1,
+  //       quantity: 1,
+  //       price: 9.97,
+  //     })
+  //   expect(res.statusCode).toEqual(201)
+  // })
 })

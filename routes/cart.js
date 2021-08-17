@@ -5,12 +5,6 @@ const db = require('../db')
 const knex = require('../src/server/db/knex')
 
 router.param('id', async (req, res, next) => {
-  //   const query = {
-  //     text: `SELECT *
-  //                FROM cart
-  //                WHERE cart.id = $1`,
-  //     values: [req.params.id],
-  //   }
   try {
     const carts = await knex('carts').where('id', req.params.id)
     if (carts[0]) {
@@ -25,22 +19,30 @@ router.param('id', async (req, res, next) => {
 })
 
 router.get('/', async (req, res) => {
-  const carts = await knex.select().from('carts')
-  res.send(carts)
+  try {
+    const carts = await knex.select().from('carts')
+    res.send(carts)
+  } catch (e) {
+    res.status(500).send(e.message)
+  }
 })
 
 router.get('/:id', async (req, res) => {
-  const cart_items = await knex('carts')
-    .join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
-    .join('products', 'cart_items.product_id', '=', 'products.id')
-    .join('users', 'carts.user_id', '=', 'users.id')
-    .select(
-      'users.email',
-      'products.name',
-      'cart_items.quantity',
-      'cart_items.price'
-    )
-  res.json({ cart_id: req.params.id, cart_items })
+  try {
+    const cart_items = await knex('carts')
+      .join('cart_items', 'cart_items.cart_id', '=', 'carts.id')
+      .join('products', 'cart_items.product_id', '=', 'products.id')
+      .join('users', 'carts.user_id', '=', 'users.id')
+      .select(
+        'users.email',
+        'products.name',
+        'cart_items.quantity',
+        'cart_items.price'
+      )
+    res.json({ cart_id: req.params.id, cart_items })
+  } catch (e) {
+    res.status(500).send()
+  }
 })
 
 router.post('/:id', async (req, res) => {
