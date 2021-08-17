@@ -59,7 +59,7 @@ router.get('/:id/items', async (req, res) => {
       .from('order_items')
       .innerJoin('orders', 'orders.id', 'order_items.order_id')
       .innerJoin('products', 'products.id', 'order_items.product_id')
-      .where('order_items.order_id', req.order.id)
+      .where('order_items.order_id', req.params.id)
     res.json({ order_items })
   } catch (e) {
     res.status(500).send(e.message)
@@ -68,12 +68,6 @@ router.get('/:id/items', async (req, res) => {
 
 router.post('/:id/items', async (req, res) => {
   const { product_id, order_id, quantity, price } = req.body
-  const query = {
-    text: `INSERT INTO orders_item
-                VALUES(DEFAULT, $1, $2, $3, $4)
-                RETURNING *;`,
-    values: [product_id, order_id, quantity, price],
-  }
   try {
     const newItem = await knex('order_items')
       .insert({

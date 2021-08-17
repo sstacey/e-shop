@@ -139,3 +139,54 @@ describe('/carts', () => {
   //   expect(res.statusCode).toEqual(201)
   // })
 })
+
+describe('/orders', () => {
+  it('should get all orders', async () => {
+    const res = await request(app)
+      .get('/orders')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+  it('should get order by id', async () => {
+    const res = await request(app)
+      .get('/orders/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(200)
+  })
+  it('should delete an order by ID', async () => {
+    const res = await request(app)
+      .delete('/orders/1')
+      .set({ Authorization: `Bearer ${user.token}` })
+    expect(res.statusCode).toEqual(204)
+  })
+  it('should create a new order', async () => {
+    const newOrder = {
+      user_id: 1,
+      total: 100.0,
+    }
+    const res = await request(app)
+      .post('/orders')
+      .set({ Authorization: `Bearer ${user.token}` })
+      .send(newOrder)
+    expect(res.statusCode).toEqual(201)
+  })
+  // it('should create a new order item', async () => {
+  //   const newOrderItem = {
+  //     product_id: 1,
+  //     order_id: 1,
+  //     quantity: 1,
+  //     price: 9.99,
+  //   }
+  //   const res = await request(app)
+  //     .post('/orders/1/items')
+  //     .set({ Authorization: `Bearer ${user.token}` })
+  //     .send(newOrderItem)
+  //   expect(res.statusCode).toEqual(201)
+  // })
+  // it('should return order items by order id', async () => {
+  //   const res = await request(app)
+  //     .get('/orders/1/items/')
+  //     .set({ Authorization: `Bearer ${user.token}` })
+  //   expect(res.statusCode).toEqual(200)
+  // })
+})
