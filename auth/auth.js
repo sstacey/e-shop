@@ -1,6 +1,7 @@
 const passport = require('passport')
 const localStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+const knex = require('../src/server/db/knex')
 
 const db = require('../db')
 const { ExtractJwt } = require('passport-jwt')
@@ -14,15 +15,14 @@ passport.use(
     },
     async (email, password, done) => {
       const hashedPassword = await bcrypt.hash(password, 10)
-      const query = {
-        text: 'INSERT INTO users VALUES (default, $1, $2) RETURNING id, email',
-        values: [email, hashedPassword],
-      }
       try {
-        const { rows } = await db.query(query)
-        return done(null, rows[0])
+        const newUser = await knex('users').returning(['id', 'email']).insert({
+          email,
+          password: hashedPassword,
+        })
+        return done(null, newUser[0])
       } catch (e) {
-        done(e.message)
+        return done(e.message)
       }
     }
   )
@@ -37,11 +37,13 @@ passport.use(
     },
     async (email, password, done) => {
       try {
-        const { rows } = await db.query(
-          'SELECT * FROM users WHERE email = $1',
-          [email]
-        )
-        const user = rows[0]
+        // const { rows } = await db.query(
+        //   'SELECT * FROM users WHERE email = $1',
+        //   [email]
+        // )
+        // const user = rows[0]
+        const users = await knex('users').where('email', email)
+        user = users[0]
 
         if (!user) {
           return done(null, false, { message: 'User not found' })
